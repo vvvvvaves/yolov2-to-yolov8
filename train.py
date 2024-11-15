@@ -15,7 +15,7 @@ def get_gradient_stats(model):
         stats['size_of_tensor'].append(len(_grad))
     return pd.DataFrame(stats)
 
-def train(epochs, train_loader, val_loader, model, optimizer, loss_fn):
+def train(epochs, train_loader, val_loader, model, optimizer, loss_fn, profiler):
 
     history = pd.DataFrame(columns=['datetime',
                                    'epoch',
@@ -25,7 +25,9 @@ def train(epochs, train_loader, val_loader, model, optimizer, loss_fn):
                                    'val_loss_per_batch'])
 
     gradient_stats = []
+    profiler.start()
     for epoch in range(1, int(epochs) + 1):
+        profiler.step()
         _datetime = datetime.datetime.now()
         print(f"{_datetime} Epoch {epoch}: ")
         train_accuracy, train_loss = training_loop(optimizer, model, loss_fn, train_loader)
@@ -39,5 +41,5 @@ def train(epochs, train_loader, val_loader, model, optimizer, loss_fn):
     #              'model': model.state_dict()}
 
     #    torch.save(result, f"./result_e{epoch}.pt")
-
-    return history, gradient_stats
+    profiler.stop()
+    return history, gradient_stats, profiler
