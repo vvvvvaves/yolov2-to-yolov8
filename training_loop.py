@@ -31,6 +31,6 @@ def training_loop(optimizer: torch.optim.Optimizer,
 
     n_batches = len(train_loader)
     accuracy = round(correct / total * 100., 4)
-    loss_per_batch = round(loss_train / n_batches * 100., 4)
+    loss_per_batch = round(loss_train / n_batches, 4)
     print(f'[Train] Accuracy: {accuracy}, Loss per batch: {loss_per_batch}')
     return accuracy, loss_per_batch

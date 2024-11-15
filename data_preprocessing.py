@@ -93,7 +93,7 @@ def get_means(path, train_loader):
             print(f'batch {i+1} done. Total images: {total_images}')
         means = _sum / n
     print(f"Means are: {means}")
-    return means.tolist()
+    return means if type(means) == list else means.tolist()
 
 def get_stds(path, train_loader):
     stds = None
@@ -114,7 +114,7 @@ def get_stds(path, train_loader):
             print(f'batch {i+1} done. Total images: {total_images}')
         stds = torch.sqrt(_sum / (n-1))
     print(f"stds are: {stds}")
-    return stds.tolist()
+    return stds if type(stds) == list else stds.tolist()
 
 def save_norms(means, stds, path='../datasets/norms.json'):
     norms = {}
@@ -139,7 +139,7 @@ def get_norms(path='../datasets/norms.json', train_loader=None):
 
 def remove_labels_with_no_data(dataset_path='../datasets/'):
     _dirs = None
-    for root, dirs, files in os.walk(os.path.join(dataset_path, 'Train.X2')):
+    for root, dirs, files in os.walk(os.path.join(dataset_path, 'Train.X')):
         _dirs = dirs
         break
 
