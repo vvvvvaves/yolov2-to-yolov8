@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 from collections import OrderedDict
 from Models.block import Conv, ClassifyV2
+from torch.autograd.profiler import record_function
 
 class Darknet19(torch.nn.Module):
     def __init__(self, device=None, dtype=None, num_classes=10, act='Leaky'):
@@ -82,23 +83,28 @@ class Darknet19(torch.nn.Module):
     def forward(self, x):
         # 224x224, stride: 0
         out = self.conv1(x)
-        out = self.max_pool(out)
+        with record_function("Max pooling"):
+            out = self.max_pool(out)
 
         # 112x112, stride: 2
         out = self.conv2(out)
-        out = self.max_pool(out)
+        with record_function("Max pooling"):
+            out = self.max_pool(out)
 
         # 56x56, stride: 4
         out = self.seq3_5(out)
-        out = self.max_pool(out)
+        with record_function("Max pooling"):
+            out = self.max_pool(out)
 
         # 28x28, stride: 8
         out = self.seq6_8(out)
-        out = self.max_pool(out)
+        with record_function("Max pooling"):
+            out = self.max_pool(out)
 
         # 14x14, stride: 16
         out = self.seq9_13(out)
-        out = self.max_pool(out)
+        with record_function("Max pooling"):
+            out = self.max_pool(out)
 
         # 7x7, stride: 32
         out = self.seq14_18(out)

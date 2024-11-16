@@ -1,6 +1,7 @@
 import torch
 import datetime
 from torch.utils.data import DataLoader
+from torch.profiler import record_function
 
 
 def training_loop(optimizer: torch.optim.Optimizer,
@@ -14,7 +15,9 @@ def training_loop(optimizer: torch.optim.Optimizer,
     for i, (imgs, labels) in enumerate(train_loader):
         _datetime = datetime.datetime.now()
         print(f"{_datetime} Batch {i+1}: ")
-        outputs = model(imgs)
+        
+        with record_function("batch_inference"):
+            outputs = model(imgs)
 
         loss = loss_fn(outputs, labels)
 

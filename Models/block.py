@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+from torch.autograd.profiler import record_function
 
 class Conv(nn.Module): # for my experiments, it is identical to the ultralytics conv module
     def __init__(self, in_channels, out_channels, 
@@ -20,7 +21,8 @@ class Conv(nn.Module): # for my experiments, it is identical to the ultralytics 
             raise Exception("Invalid activation function.")
 
     def forward(self, x):
-        out = self.act(self.bn(self.conv(x)))
+        with record_function("Conv block"):
+            out = self.act(self.bn(self.conv(x)))
         return out
 
 class Bottleneck(nn.Module):
@@ -93,22 +95,19 @@ class ClassifyV2(nn.Module):
         self.conv = nn.Conv2d(in_channels, num_classes, kernel_size=(1, 1), stride=(1, 1), 
                               padding=(0,0), bias=False,
                               device=device, dtype=dtype)
-        self.avg_pool = None
+        self.avg_pool = nn.AdaptiveAvgPool2d(1)
         self.softmax = nn.LogSoftmax(dim=1)
 
     def forward(self, x):
         out = self.conv(x)
+        with record_function("Adaptive Average Pooling"):
+            out = self.avg_pool(out)
 
-        N = out.shape[0]
-        C = out.shape[1]
-        H = out.shape[2]
-        W = out.shape[3]
-        self.avg_pool = nn.AvgPool2d(kernel_size=(H,W), stride=(H,W))
+        with record_function("Flatten"):
+            out = out.flatten(1)
         
-        out = self.avg_pool(out)
-        out = out.view(N, C)
-
-        out = self.softmax(out)
+        with record_function("Log Softmax"):
+            out = self.softmax(out)
 
         return out
 
@@ -129,8 +128,16 @@ class ClassifyV8(nn.Module):
         if type(x) is list:
             x = torch.cat(x, 1)
         out = self.conv(x)
-        out = self.pool(out)
-        out = self.linear(out.flatten(1))
-        out = self.softmax(out)
+        with record_function("Adaptive Average Pooling"):
+            out = self.pool(out)
+            
+        with record_function("Flatten"):
+            out = out.flatten(1)
+            
+        with record_function("Linear layer"):
+            out = self.linear(out)
+            
+        with record_function("Log Softmax"):
+            out = self.softmax(out)
         return out 
 
