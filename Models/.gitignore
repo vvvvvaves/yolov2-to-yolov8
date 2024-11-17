@@ -1,0 +1,8 @@
+/.ipynb_checkpoints
+/runs
+/__pycache__
+/*.txt
+/YOLOv8n_20.ipynb
+/yolov8m-cls.pt
+/yolov8m.pt
+/yolov8x.pt
