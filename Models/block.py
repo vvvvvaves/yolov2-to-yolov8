@@ -82,6 +82,8 @@ class C2f(nn.Module):
                 out = block(out)
                 if self.add_hidden:
                     _out.append(out)
+            if not self.add_hidden:
+                _out[0] = out
             out = torch.cat(_out, 1)
         else:
             for block in self.n_blocks:

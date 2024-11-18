@@ -1,5 +1,5 @@
 import os
-import json
+import pickle
 import datetime
 from training_loop import training_loop
 from validation_loop import validation_loop
@@ -23,12 +23,12 @@ def save_train_outputs(path, history, gradient_stats, prof):
              'gradient_stats': gradient_stats,
              'prof': prof}
     
-    with open(os.path.join(path, 'train_outputs.json'), 'wb') as file:
-        json.dump(_dict, file)
+    with open(os.path.join(path, 'train_outputs.pickle'), 'wb') as file:
+        pickle.dump(_dict, file, protocol=pickle.HIGHEST_PROTOCOL)
 
 def load_train_outputs(path):
-    with open(os.path.join(path, 'train_outputs.json'), 'rb') as file:
-        return json.load(file)
+    with open(os.path.join(path, 'train_outputs.pickle'), 'rb') as file:
+        return pickle.load(file)
 
 def train(epochs, train_loader, val_loader, model, optimizer, loss_fn, profiler):
 

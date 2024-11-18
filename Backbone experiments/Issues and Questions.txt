@@ -1,0 +1,6 @@
+What is normal gradient size and how to measure my gradient size?
+How to ensure weight initialization is +-equal for all the models?
+Inference time is always different. How to fix it?
+
+- I need to save models during training
+- I need to decorate YOLOv8cls model
