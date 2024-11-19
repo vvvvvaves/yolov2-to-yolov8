@@ -40,13 +40,14 @@ class Bottleneck(nn.Module):
         self.add = residual_connection and in_channels == out_channels
 
     def forward(self, x):
-        out = self.conv1(x)
-        out = self.conv2(out)
-
-        if self.add:
-            return x + out
-        else:
-            return out
+        with record_function("Bottleneck block"):
+            out = self.conv1(x)
+            out = self.conv2(out)
+    
+            if self.add:
+                return x + out
+            else:
+                return out
 
 class C2f(nn.Module):
     def __init__(self, in_channels, out_channels, n=1, residual_connection=False, CSP=False, add_hidden=False, bottleneck=1.0,
@@ -74,21 +75,22 @@ class C2f(nn.Module):
         ])
 
     def forward(self, x):
-        out = self.conv1(x)
-        if self.CSP:
-            _out = list(out.chunk(2, dim=1))
-            out = _out[0]
-            for block in self.n_blocks:
-                out = block(out)
-                if self.add_hidden:
-                    _out.append(out)
-            if not self.add_hidden:
-                _out[0] = out
-            out = torch.cat(_out, 1)
-        else:
-            for block in self.n_blocks:
-                out = block(out)
-        out = self.conv2(out)
+        with record_function("C2f block"):
+            out = self.conv1(x)
+            if self.CSP:
+                _out = list(out.chunk(2, dim=1))
+                out = _out[0]
+                for block in self.n_blocks:
+                    out = block(out)
+                    if self.add_hidden:
+                        _out.append(out)
+                if not self.add_hidden:
+                    _out[0] = out
+                out = torch.cat(_out, 1)
+            else:
+                for block in self.n_blocks:
+                    out = block(out)
+            out = self.conv2(out)
         return out
 
 class ClassifyV2(nn.Module):
@@ -101,16 +103,16 @@ class ClassifyV2(nn.Module):
         self.softmax = nn.LogSoftmax(dim=1)
 
     def forward(self, x):
-        out = self.conv(x)
-        with record_function("Adaptive Average Pooling"):
-            out = self.avg_pool(out)
-
-        with record_function("Flatten"):
-            out = out.flatten(1)
-        
-        with record_function("Log Softmax"):
-            out = self.softmax(out)
-
+        with record_function("ClassifyV2"):
+            out = self.conv(x)
+            with record_function("Adaptive Average Pooling"):
+                out = self.avg_pool(out)
+    
+            with record_function("Flatten"):
+                out = out.flatten(1)
+            
+            with record_function("Log Softmax"):
+                out = self.softmax(out)
         return out
 
 class ClassifyV8(nn.Module):
@@ -127,19 +129,20 @@ class ClassifyV8(nn.Module):
         self.softmax = nn.LogSoftmax(dim=1)
 
     def forward(self, x):
-        if type(x) is list:
-            x = torch.cat(x, 1)
-        out = self.conv(x)
-        with record_function("Adaptive Average Pooling"):
-            out = self.pool(out)
-            
-        with record_function("Flatten"):
-            out = out.flatten(1)
-            
-        with record_function("Linear layer"):
-            out = self.linear(out)
-            
-        with record_function("Log Softmax"):
-            out = self.softmax(out)
+        with record_function("ClassifyV8"):
+            if type(x) is list:
+                x = torch.cat(x, 1)
+            out = self.conv(x)
+            with record_function("Adaptive Average Pooling"):
+                out = self.pool(out)
+                
+            with record_function("Flatten"):
+                out = out.flatten(1)
+                
+            with record_function("Linear layer"):
+                out = self.linear(out)
+                
+            with record_function("Log Softmax"):
+                out = self.softmax(out)
         return out 
 

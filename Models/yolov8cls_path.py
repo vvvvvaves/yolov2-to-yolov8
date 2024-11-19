@@ -20,8 +20,6 @@ class Model(nn.Module):
         self.mc = Model.variants[self.variant]['mc']
         self.w = Model.variants[self.variant]['w']
         self.d = Model.variants[self.variant]['d']
-        self._ch = lambda ch: int(min(ch, self.mc)*self.w)
-        self._d = lambda d: int(d * self.d)
 
         self.conv1 = Conv(3, out_channels=self._ch(64), kernel_size=(3, 3), stride=(2, 2), 
                          padding=(1, 1), bias=False, 
@@ -58,10 +56,17 @@ class Model(nn.Module):
             self.classify = ClassifyV2(self._ch(1024), num_classes=num_classes,
                                       device=device, dtype=dtype)
 
+    def _ch(self, ch):
+        return int(min(ch, self.mc)*self.w)
+
+    def _d(self, d):
+        return int(d * self.d)
+
     def forward(self, x):
         out = self.conv1(x)
         out = self.conv2(out)
 
+        
         out = self.c2f1(out)
         out = self.conv3(out)
 
