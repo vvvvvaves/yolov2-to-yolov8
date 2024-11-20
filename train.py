@@ -8,13 +8,16 @@ import torch
 from torch.autograd.profiler import record_function
 
 def get_gradient_stats(model):
-    stats = {'parameter_i': [], 'mean': [], 'median': [], 'std': [], 'mean_abs': [], 'median_abs': [], 'std_abs': [], 'size_of_tensor':[]}
-    for i, parameter in enumerate(model.parameters()):
+    stats = {'parameter_i': [], 'name': [], 'mean': [], 'median': [], 'std': [], 'max': [], 'min': [], 'mean_abs': [], 'median_abs': [], 'std_abs': [], 'size_of_tensor':[]}
+    for i, (name, parameter) in enumerate(model.named_parameters()):
         stats['parameter_i'].append(i)
+        stats['name'].append(name)
         _grad = parameter.grad.flatten()
         stats['mean'].append(torch.mean(_grad))
         stats['median'].append(torch.median(_grad))
         stats['std'].append(torch.std(_grad))
+        stats['max'].append(torch.max(_grad))
+        stats['min'].append(torch.min(_grad))
         stats['mean_abs'].append(torch.mean(torch.abs(_grad)))
         stats['median_abs'].append(torch.median(torch.abs(_grad)))
         stats['std_abs'].append(torch.std(torch.abs(_grad)))
