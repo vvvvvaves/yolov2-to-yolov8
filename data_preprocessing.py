@@ -1,8 +1,5 @@
 import torch
 import numpy as np
-import ultralytics
-from ultralytics import YOLO
-import matplotlib.pyplot as plt
 
 from torch.utils.data import Dataset
 from torch.utils.data import DataLoader

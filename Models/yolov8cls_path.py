@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 from Models.block import *
+from torch.autograd.profiler import record_function
 
 class Model(nn.Module):
     variants = {'n': {'d': 0.34, 'w': 0.25, 'mc': 1024},
@@ -63,20 +64,29 @@ class Model(nn.Module):
         return int(d * self.d)
 
     def forward(self, x):
-        out = self.conv1(x)
-        out = self.conv2(out)
+        with record_function('conv1'):
+            out = self.conv1(x)
+        with record_function('conv2'):
+            out = self.conv2(out)
 
+        with record_function('c2f1'):
+            out = self.c2f1(out)
+        with record_function('conv3'):
+            out = self.conv3(out)
+
+        with record_function('c2f2'):
+            out = self.c2f2(out)
+        with record_function('conv4'):
+            out = self.conv4(out)
+
+        with record_function('c2f3'):
+            out = self.c2f3(out)
+        with record_function('conv5'):
+            out = self.conv5(out)
         
-        out = self.c2f1(out)
-        out = self.conv3(out)
+        with record_function('c2f4'):
+            out = self.c2f4(out)
 
-        out = self.c2f2(out)
-        out = self.conv4(out)
-
-        out = self.c2f3(out)
-        out = self.conv5(out)
-
-        out = self.c2f4(out)
-
-        out = self.classify(out)
+        with record_function('classify'):
+            out = self.classify(out)
         return out
