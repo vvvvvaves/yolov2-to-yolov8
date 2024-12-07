@@ -16,8 +16,9 @@ def training_loop(optimizer: torch.optim.Optimizer,
         imgs = imgs.to('cuda:0')
         labels = labels.to('cuda:0')
         
-        _datetime = datetime.datetime.now()
-        print(f"{_datetime} Batch {i+1} ")
+        if (i+1) % 15 == 0:
+            _datetime = datetime.datetime.now()
+            print(f"{_datetime} Batch {i+1} ")
         
         outputs = model(imgs)
 

@@ -61,11 +61,11 @@ class ImageNetSubset(Dataset):
                      label = label.half()
             return img, label
         else:
-            to_tensor = transforms.ToTensor()
-            img = to_tensor(img)
-            if self.half:
-                img = img.half()
-                if not self.show:
+            if not self.show:
+                to_tensor = transforms.ToTensor()
+                img = to_tensor(img)
+                if self.half:
+                    img = img.half()
                     label = label.half()
             return img, label
 

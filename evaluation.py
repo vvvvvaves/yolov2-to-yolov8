@@ -1,6 +1,13 @@
 import torch
 from torch.profiler import profile, ProfilerActivity
 import pandas as pd
+import matplotlib.pyplot as plt
+
+def plot_accuracy(history):
+    plt.plot(history['train_accuracy'], label='train accuracy')
+    plt.plot(history['val_accuracy'], label='val accuracy')
+    plt.legend()
+    return plt
 
 def show_tree(obj, r=0, n=90):
     if r == 0:
