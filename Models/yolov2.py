@@ -7,11 +7,14 @@ The weights for the backbone are taken from https://github.com/yjh0410/pytorch-i
 """
 
 class Conv_BN_LeakyReLU(nn.Module):
-    def __init__(self, in_channels, out_channels, ksize, padding=0, stride=1, dilation=1):
+    def __init__(self, in_channels, out_channels, ksize, padding=0, stride=1, dilation=1, 
+                 dtype=None, device=None):
         super(Conv_BN_LeakyReLU, self).__init__()
+        self.dtype = dtype
+        self.device = device
         self.convs = nn.Sequential(
-            nn.Conv2d(in_channels, out_channels, ksize, padding=padding, stride=stride, dilation=dilation, device=torch.device('cuda:0')),
-            nn.BatchNorm2d(out_channels, device=torch.device('cuda:0')),
+            nn.Conv2d(in_channels, out_channels, ksize, padding=padding, stride=stride, dilation=dilation, device=self.device, dtype=self.dtype),
+            nn.BatchNorm2d(out_channels, device=self.device, dtype=self.dtype),
             nn.LeakyReLU(0.1, inplace=True)
         )
 
@@ -35,55 +38,75 @@ class reorg_layer(nn.Module):
         return x
 
 class DarkNet_19(nn.Module):
-    def __init__(self):        
+    def __init__(self, dtype=None, device=None):        
         super(DarkNet_19, self).__init__()
+        self.dtype = dtype
+        self.device = device
         # backbone network : DarkNet-19
         # output : stride = 2, c = 32
         self.conv_1 = nn.Sequential(
-            Conv_BN_LeakyReLU(3, 32, 3, 1),
+            Conv_BN_LeakyReLU(3, 32, 3, 1, 
+                              device=self.device, dtype=self.dtype),
             nn.MaxPool2d((2,2), 2),
         )
 
         # output : stride = 4, c = 64
         self.conv_2 = nn.Sequential(
-            Conv_BN_LeakyReLU(32, 64, 3, 1),
+            Conv_BN_LeakyReLU(32, 64, 3, 1, 
+                              device=self.device, dtype=self.dtype),
             nn.MaxPool2d((2,2), 2)
         )
 
         # output : stride = 8, c = 128
         self.conv_3 = nn.Sequential(
-            Conv_BN_LeakyReLU(64, 128, 3, 1),
-            Conv_BN_LeakyReLU(128, 64, 1),
-            Conv_BN_LeakyReLU(64, 128, 3, 1),
+            Conv_BN_LeakyReLU(64, 128, 3, 1, 
+                              device=self.device, dtype=self.dtype),
+            Conv_BN_LeakyReLU(128, 64, 1, 
+                              device=self.device, dtype=self.dtype),
+            Conv_BN_LeakyReLU(64, 128, 3, 1, 
+                              device=self.device, dtype=self.dtype),
             nn.MaxPool2d((2,2), 2)
         )
 
         # output : stride = 8, c = 256
         self.conv_4 = nn.Sequential(
-            Conv_BN_LeakyReLU(128, 256, 3, 1),
-            Conv_BN_LeakyReLU(256, 128, 1),
-            Conv_BN_LeakyReLU(128, 256, 3, 1),
+            Conv_BN_LeakyReLU(128, 256, 3, 1, 
+                              device=self.device, dtype=self.dtype),
+            Conv_BN_LeakyReLU(256, 128, 1, 
+                              device=self.device, dtype=self.dtype),
+            Conv_BN_LeakyReLU(128, 256, 3, 1, 
+                              device=self.device, dtype=self.dtype),
         )
 
 
         # output : stride = 16, c = 512
         self.maxpool_4 = nn.MaxPool2d((2, 2), 2)
         self.conv_5 = nn.Sequential(
-            Conv_BN_LeakyReLU(256, 512, 3, 1),
-            Conv_BN_LeakyReLU(512, 256, 1),
-            Conv_BN_LeakyReLU(256, 512, 3, 1),
-            Conv_BN_LeakyReLU(512, 256, 1),
-            Conv_BN_LeakyReLU(256, 512, 3, 1),
+            Conv_BN_LeakyReLU(256, 512, 3, 1, 
+                              device=self.device, dtype=self.dtype),
+            Conv_BN_LeakyReLU(512, 256, 1, 
+                              device=self.device, dtype=self.dtype),
+            Conv_BN_LeakyReLU(256, 512, 3, 1, 
+                             device=self.device, dtype=self.dtype),
+            Conv_BN_LeakyReLU(512, 256, 1,
+                             device=self.device, dtype=self.dtype),
+            Conv_BN_LeakyReLU(256, 512, 3, 1,
+                             device=self.device, dtype=self.dtype),
         )
         
         # output : stride = 32, c = 1024
         self.maxpool_5 = nn.MaxPool2d((2, 2), 2)
         self.conv_6 = nn.Sequential(
-            Conv_BN_LeakyReLU(512, 1024, 3, 1),
-            Conv_BN_LeakyReLU(1024, 512, 1),
-            Conv_BN_LeakyReLU(512, 1024, 3, 1),
-            Conv_BN_LeakyReLU(1024, 512, 1),
-            Conv_BN_LeakyReLU(512, 1024, 3, 1)
+            Conv_BN_LeakyReLU(512, 1024, 3, 1, 
+                              device=self.device, dtype=self.dtype),
+            Conv_BN_LeakyReLU(1024, 512, 1,
+                             device=self.device, dtype=self.dtype),
+            Conv_BN_LeakyReLU(512, 1024, 3, 1,
+                             device=self.device, dtype=self.dtype),
+            Conv_BN_LeakyReLU(1024, 512, 1,
+                             device=self.device, dtype=self.dtype),
+            Conv_BN_LeakyReLU(512, 1024, 3, 1,
+                             device=self.device, dtype=self.dtype)
         )
 
 
@@ -112,7 +135,7 @@ class YOLOv2D19(nn.Module):
         self.dtype = dtype
 
         # Load pretrained backbone
-        state_dict = torch.load(state_dict_path, map_location='cuda:0')
+        state_dict = torch.load(state_dict_path, map_location=self.device)
         del state_dict['conv_7.weight']
         del state_dict['conv_7.bias']
 
@@ -121,17 +144,22 @@ class YOLOv2D19(nn.Module):
         
         # detection head
         self.convsets_1 = nn.Sequential(
-            Conv_BN_LeakyReLU(1024, 1024, 3, 1),
-            Conv_BN_LeakyReLU(1024, 1024, 3, 1)
+            Conv_BN_LeakyReLU(1024, 1024, 3, 1,
+                             device=self.device, dtype=self.dtype),
+            Conv_BN_LeakyReLU(1024, 1024, 3, 1,
+                             device=self.device, dtype=self.dtype)
         )
 
-        self.route_layer = Conv_BN_LeakyReLU(512, 64, 1)
+        self.route_layer = Conv_BN_LeakyReLU(512, 64, 1,
+                                            device=self.device, dtype=self.dtype)
         self.reorg = reorg_layer(stride=2)
 
-        self.convsets_2 = Conv_BN_LeakyReLU(1280, 1024, 3, 1)
+        self.convsets_2 = Conv_BN_LeakyReLU(1280, 1024, 3, 1,
+                                           device=self.device, dtype=self.dtype)
         
         # prediction layer
-        self.pred = nn.Conv2d(1024, self.num_anchors*(1 + 4 + self.num_classes), kernel_size=1, device=torch.device('cuda:0'))
+        self.pred = nn.Conv2d(1024, self.num_anchors*(1 + 4 + self.num_classes), kernel_size=1, 
+                              device=self.device, dtype=self.dtype)
 
 
     def forward(self, x):
