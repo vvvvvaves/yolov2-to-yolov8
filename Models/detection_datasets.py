@@ -99,7 +99,7 @@ class VOCDatasetV2(Dataset):
             class_label = int(class_label)
 
             # =========== TEST ==========
-            print('class_label ', class_label)
+            # print('class_label ', class_label)
             # =========== TEST ==========
         
             obj_w = xmax - xmin
@@ -116,8 +116,8 @@ class VOCDatasetV2(Dataset):
                 cell_y = int(obj_yc / cell_h)
 
                 # =========== TEST ==========
-                print('cell_x ', cell_x)
-                print('cell_y ', cell_y)
+                # print('cell_x ', cell_x)
+                # print('cell_y ', cell_y)
                 # =========== TEST ==========
                 
                 
@@ -142,7 +142,7 @@ class VOCDatasetV2(Dataset):
                 best_anchor = anchors_argsort[0]
 
                 # =========== TEST ==========
-                print('best_anchor ', best_anchor)
+                # print('best_anchor ', best_anchor)
                 # =========== TEST ==========
                 
                 
