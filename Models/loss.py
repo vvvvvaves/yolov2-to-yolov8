@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+import datetime
 
 class YOLOv2Loss(nn.Module):
     def __init__(self, anchors, lambda_noobj=0.5, lambda_coord=5.0, num_classes=20):
@@ -12,7 +13,6 @@ class YOLOv2Loss(nn.Module):
         self.anchors = anchors
         
     def forward(self, out, gt_out):
-        
         # [conf, obj_xc, obj_yc, obj_w, obj_h]
         is_obj = gt_out[:, 0::25, ...] == 1.0
         no_obj = gt_out[:, 0::25, ...] == 0.0

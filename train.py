@@ -8,7 +8,9 @@ from torch.autograd.profiler import record_function
 
 from cls_train import get_gradient_stats, save_train_outputs, load_train_outputs, load_model_with_grads
 
-def train(epochs, train_loader, val_loader, model, optimizer, loss_fn, scheduler, outputs_path, save_at=1, save_grad=True, resume=False):
+def train(epochs, train_loader, val_loader, model, optimizer, 
+          loss_fn, scheduler, outputs_path, save_at=1, save_grad=True, 
+          resume=False, scaler=torch.amp.GradScaler("cuda")):
     model_path = os.path.join(outputs_path, 'models/')
     if not os.path.exists(model_path):
         os.makedirs(model_path)
@@ -36,7 +38,7 @@ def train(epochs, train_loader, val_loader, model, optimizer, loss_fn, scheduler
     for epoch in range(starting_epoch, int(epochs + starting_epoch)):
         _datetime = datetime.datetime.now()
         print(f"{_datetime} Epoch {epoch} ")
-        train_map, train_loss = training_loop(optimizer, model, loss_fn, train_loader)
+        train_map, train_loss = training_loop(optimizer, model, loss_fn, train_loader, scaler)
 
         val_map, val_loss = validation_loop(model, val_loader, loss_fn)
         _gradient_stats = get_gradient_stats(model)
