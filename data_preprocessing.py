@@ -92,7 +92,7 @@ def get_means(path, train_loader):
     print(f"Means are: {means}")
     return means if type(means) == list else means.tolist()
 
-def get_stds(path, train_loader):
+def get_stds(path, means, train_loader):
     stds = None
     if os.path.isfile(path):
         with open(path, 'r') as file:

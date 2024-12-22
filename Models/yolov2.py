@@ -139,7 +139,7 @@ class YOLOv2D19(nn.Module):
         del state_dict['conv_7.weight']
         del state_dict['conv_7.bias']
 
-        self.backbone = DarkNet_19()
+        self.backbone = DarkNet_19(device=self.device, dtype=self.dtype)
         self.backbone.load_state_dict(state_dict)
         
         # detection head

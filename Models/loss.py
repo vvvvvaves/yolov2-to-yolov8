@@ -2,15 +2,17 @@ import torch
 import torch.nn as nn
 
 class YOLOv2Loss(nn.Module):
-    def __init__(self, lambda_noobj=0.5, lambda_coord=5.0, num_classes=20):
+    def __init__(self, anchors, lambda_noobj=0.5, lambda_coord=5.0, num_classes=20):
         super().__init__()
         self.mse = torch.nn.MSELoss(reduction='sum')
         self.softmax = torch.nn.Softmax(dim=2)
         self.lambda_noobj = lambda_noobj
         self.lambda_coord = lambda_coord
         self.num_classes = num_classes
+        self.anchors = anchors
         
-    def forward(self, out, gt_out, anchors):
+    def forward(self, out, gt_out):
+        
         # [conf, obj_xc, obj_yc, obj_w, obj_h]
         is_obj = gt_out[:, 0::25, ...] == 1.0
         no_obj = gt_out[:, 0::25, ...] == 0.0
@@ -39,7 +41,7 @@ class YOLOv2Loss(nn.Module):
         yc_pred = out[:, 2::25, ...].sigmoid()
         
         scale = gt_out.shape[-1]
-        _anchors = torch.tensor(anchors) * scale
+        _anchors = torch.tensor(self.anchors).to(out.device) * scale
         pw = _anchors[:, 0]
         ph = _anchors[:, 1]
         
@@ -64,14 +66,14 @@ class YOLOv2Loss(nn.Module):
 
         # CLASS LOSS ================
         class_true = []
-        for i in range(len(anchors)):
+        for i in range(len(self.anchors)):
             first_idx = 5 + i*(5+self.num_classes)
             last_idx = 25 + i*(5+self.num_classes)
             class_true.append(gt_out[:, first_idx:last_idx, ...])
         class_true = torch.stack(class_true, dim=1)
 
         class_pred = []
-        for i in range(len(anchors)):
+        for i in range(len(self.anchors)):
             first_idx = 5 + i*(5+self.num_classes)
             last_idx = 25 + i*(5+self.num_classes)
             class_pred.append(gt_out[:, first_idx:last_idx, ...])
