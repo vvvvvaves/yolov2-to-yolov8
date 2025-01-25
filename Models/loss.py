@@ -5,7 +5,7 @@ import datetime
 class YOLOv2Loss(nn.Module):
     def __init__(self, anchors, lambda_noobj=0.5, lambda_coord=5.0, num_classes=20):
         super().__init__()
-        self.mse = torch.nn.MSELoss(reduction='sum')
+        self.mse = torch.nn.MSELoss(reduction='mean')
         self.softmax = torch.nn.Softmax(dim=2)
         self.lambda_noobj = lambda_noobj
         self.lambda_coord = lambda_coord
@@ -32,38 +32,53 @@ class YOLOv2Loss(nn.Module):
         # ===========================
 
         # BOX LOSS ==================
+            # XCYC LOSS ==================
         xc_true = gt_out[:, 1::25, ...]
         yc_true = gt_out[:, 2::25, ...]
-        w_true = gt_out[:, 3::25, ...]
-        h_true = gt_out[:, 4::25, ...]
-        
+
         xc_pred = out[:, 1::25, ...].sigmoid()
         yc_pred = out[:, 2::25, ...].sigmoid()
+
+        xc_pred = is_obj * xc_pred
+        xc_true = is_obj * xc_true
+        yc_pred = is_obj * yc_pred
+        yc_true = is_obj * yc_true
+
+        xc_loss = self.mse(xc_pred, xc_true)
+        yc_loss = self.mse(yc_pred, yc_true)
+            # ============================
+
+            # WH LOSS ====================
+        
+        w_true = gt_out[:, 3::25, ...]
+        h_true = gt_out[:, 4::25, ...]
         
         scale = gt_out.shape[-1]
         _anchors = torch.tensor(self.anchors).to(out.device) * scale
         pw = _anchors[:, 0]
         ph = _anchors[:, 1]
         
-        w_pred = pw[None, :, None, None] * out[:, 3::25, ...].exp()
-        h_pred = ph[None, :, None, None] * out[:, 4::25, ...].exp()
+        w_pred = out[:, 3::25, ...]
+        h_pred = out[:, 4::25, ...]
 
-        xc_pred = is_obj * xc_pred
-        xc_true = is_obj * xc_true
-        yc_pred = is_obj * yc_pred
-        yc_true = is_obj * yc_true
+        w_true = torch.log(
+            1e-16 + w_true / pw[None, :, None, None]
+        )
+        h_true = torch.log(
+            1e-16 + h_true / ph[None, :, None, None]
+        )
         
         w_pred = is_obj * w_pred
         w_true = is_obj * w_true
         h_pred = is_obj * h_pred
         h_true = is_obj * h_true
 
-        xc_loss = self.mse(xc_pred, xc_true)
-        yc_loss = self.mse(yc_pred, yc_true)
-        w_loss = self.mse(w_pred.sqrt(), w_true.sqrt())
-        h_loss = self.mse(h_pred.sqrt(), h_true.sqrt())
+        w_loss = self.mse(w_pred, w_true)
+        h_loss = self.mse(h_pred, h_true)
+        
+            # ============================
         # ===========================
-
+        
         # CLASS LOSS ================
         class_true = []
         for i in range(len(self.anchors)):
@@ -87,10 +102,10 @@ class YOLOv2Loss(nn.Module):
         class_loss = self.mse(class_pred, class_true)
         # ===========================
 
-        loss =  self.lambda_coord * (xc_loss + yc_loss) + \
+        loss =  \
                 self.lambda_coord * (w_loss + h_loss) + \
+                self.lambda_coord * (xc_loss + yc_loss) + \
                 is_obj_conf_loss + \
                 self.lambda_noobj * no_obj_conf_loss + \
                 class_loss
-
         return loss

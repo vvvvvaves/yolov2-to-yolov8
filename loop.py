@@ -14,6 +14,9 @@ def training_loop(optimizer: torch.optim.Optimizer,
             _datetime = datetime.datetime.now()
             print(f"{_datetime} Batch {i+1} ")
 
+        # ====================
+        # SCALER
+
         with torch.amp.autocast(device_type="cuda", dtype=torch.float16):
             optimizer.zero_grad()
 
@@ -31,6 +34,21 @@ def training_loop(optimizer: torch.optim.Optimizer,
         scaler.step(optimizer)
 
         scaler.update()
+
+        # ==========================
+        # NO SCALER
+
+        # outputs = model(imgs)
+
+        # loss = loss_fn(outputs, labels)
+        
+        # optimizer.zero_grad()
+
+        # loss.backward()
+
+        # optimizer.step()
+
+        #=============================
 
         loss_train += loss.item()
 
