@@ -5,24 +5,25 @@ The experiment is divided into two parts. The first part compares the backbones 
 
 ## Backbone models compared in the study:
 
-### Baseline: Darknet-19. It is implemented in accordance with the YOLOv2 paper.
+### Baseline: Darknet-19
+It is implemented in accordance with the YOLOv2 paper.
 
-Experimental model: Version 1
+### Experimental model: Version 1
 This model can also be called “bare YOLOv8.” It has the same blocks as YOLOv8-cls, yet, they are stripped of constructs which were not implemented in YOLOv2. It is half the size of Darknet-19, which makes the comparison between them impossible. But it is an architecture with the same set of techniques and, hence, serves as a reference point for further steps in the experiment. In summary, the model:
 - Does not have residual connections
 - Uses the classification head of Darknet-19
 - C2f blocks do not implement CSP strategy (they are just a sequence of consecutive convolutions without the concatenation of hidden outputs).
 
-Experimental model: Version 2
+### Experimental model: Version 2
 The second model builds off of the first one. It is the same, except it has residual connections implemented in every bottleneck block.
 
-Experimental model: Version 3
+### Experimental model: Version 3
 The third model is the same as the second one, except it implements Cross Stage Partial strategy. It does not concatenate hidden outputs.
 
-Experimental model: Version 4
+### Experimental model: Version 4
 The fourth model is the same as the third one, except it concatenates hidden outputs of the bottleneck blocks.
 
-Final model: YOLOv8s-cls (Version 5)
+### Final model: YOLOv8s-cls (Version 5)
 
 The fifth model is the same as the fourth one, except it uses YOLOv8 classification head instead of YOLOv2 classification head. While Darknet-19 is fully convolutional, YOLOv8 classifier uses a fully connected layer to make predictions.
 
