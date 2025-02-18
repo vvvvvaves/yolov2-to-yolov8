@@ -32,7 +32,7 @@ The fifth model fully matches the YOLOv8 classifier. It is the end model of back
 ## Backbone experiments: results
 
 | | Baseline (Darknet-19) | Version 1 | Version 2 | Version 3 | Version 4 | Version-5 (YOLOv8s-cls) |
-| :----:   | :----: | :----: |  :----: | :----: | :----: | :----:   |
+| :----:   | :------: | :------: |  :------: | :------: | :------: | :----:   |
 | Residual connections |    | ✓   | 301   | 283   | 283   |
 | CSP |    | ✓   | 301   | 283   | 283   |
 | Concatenation of hidden outputs |    | ✓   | 301   | 283   | 283   |
