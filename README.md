@@ -22,7 +22,9 @@ Experimental model: Version 4
 The fourth model is the same as the third one, except it concatenates hidden outputs of the bottleneck blocks.
 
 Final model: YOLOv8s-cls (Version 5)
+
 The fifth model is the same as the fourth one, except it uses YOLOv8 classification head instead of YOLOv2 classification head. While Darknet-19 is fully convolutional, YOLOv8 classifier uses a fully connected layer to make predictions.
+
 The fifth model fully matches the YOLOv8 classifier. It is the end model of backbone experiments.
 
 
