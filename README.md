@@ -3,7 +3,7 @@ The following repository contains the code from my thesis. The thesis explores t
 
 The experiment is divided into two parts. The first part compares the backbones of YOLOv2 and YOLOv8. The second part compares YOLOv2 and YOLOv8 detection models. The comparison is done by taking a baseline model and building it up until it matches the final model. The build-up is divided into steps, with each step adding a single or multiple design elements.
 
-Imagenette2 is used as a dataset for classification training.
+_Imagenette2_ is used as a dataset for classification training.
 
 ## Backbone models compared in the study:
 
