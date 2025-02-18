@@ -41,14 +41,16 @@ The fifth model fully matches the YOLOv8 classifier. It is the end model of back
 | :---------------------------:   | :--------: | :-------: |  :------: | :-------: | :-------: | :-------:   |
 | Inference, ms [640]           | 379.794      |  216.398  | 211.871   | 114.806   | 120.620   | 117.802     |
 | Inference, ms [224]           | 70.62        | 51.919    | 54.367    | 40.979    | 43.748    | 25.422      |
-| Parameters, M                 | 20.8         | 10.5      | 10.5      | 4.7       | 4.9       | 6.4         |
+| Parameters, M                 | 20.8         | 10.5      | 10.5      | 4.7       | 4.9       | __6.4__     |
 | GFLOPs (torch) [640]          | 45.57        | 28.69     | 28.69     | 11.70     | 12.33     | 12.70       |
-| GFLOPs (thop) [640]           | 45.86        | 28.86     | 28.86     | 11.84     | 12.47     | 13.61       |
-| GFLOPs (torch) [224]          | 5.58         | 3.51      | 3.51      | 1.43      | 1.51      | 1.56        |
+| GFLOPs (thop) [640]           | 45.86        | 28.86     | 28.86     | 11.84     | 12.47     | __13.61__   |
+| GFLOPs (torch) [224]          | __5.58__     | 3.51      | 3.51      | 1.43      | 1.51      | 1.56        |
 | GFLOPs (thop) [224]           | 5.62         | 3.54      | 3.54      | 1.45      | 1.53      | 1.67        |
 | Peak Memory Usage, MB [640]   | 100.0        | 31.4      | 31.4      | 34.4      | 40.6      | 40.6        |
 | Peak Memory Usage, MB [224]   | 18.5         | 9.5       | 9.5       | 5.0       | 5.0       | 5.0         |
 | Validation accuracy, % [224] [20 epochs]                    | 76.74%       | 67.82%    | 73.99%    | 75.69%    | 74.93%    | 76.54%      |
+__Bold__ indicates measures that align with those presented by the authors of original implementations.
+
 
 
 
