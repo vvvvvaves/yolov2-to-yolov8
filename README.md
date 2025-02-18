@@ -49,8 +49,7 @@ The fifth model fully matches the YOLOv8 classifier. It is the end model of back
 | Peak Memory Usage, MB [640]   | 100.0        | 31.4      | 31.4      | 34.4      | 40.6      | 40.6        |
 | Peak Memory Usage, MB [224]   | 18.5         | 9.5       | 9.5       | 5.0       | 5.0       | 5.0         |
 | Validation accuracy, % [224] [20 epochs]                    | 76.74%       | 67.82%    | 73.99%    | 75.69%    | 74.93%    | 76.54%      |
-__Bold__ indicates measures that align with those presented by the authors of original implementations.
-
+\caption{__Bold__ indicates measures that align with those presented by the authors of original implementations.}
 
 
 
