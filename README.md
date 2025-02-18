@@ -39,6 +39,13 @@ The fifth model fully matches the YOLOv8 classifier. It is the end model of back
 | YOLOv8 classification head      |            |           |           |           |           | ✓           |
 
 
+|                                 | Darknet-19 | Version 1 | Version 2 | Version 3 | Version 4 | YOLOv8s-cls |
+| :---------------------------:   | :--------: | :-------: |  :------: | :-------: | :-------: | :-------:   |
+| Inference, ms [640]           |            |           |          |          |          |            |
+
+
+
+
 
 
 
