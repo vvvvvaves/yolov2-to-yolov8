@@ -29,8 +29,6 @@ The fifth model is the same as the fourth one, except it uses YOLOv8 classificat
 
 The fifth model fully matches the YOLOv8 classifier. It is the end model of backbone experiments.
 
-## Backbone experiments: results
-
 |                                 | Darknet-19 | Version 1 | Version 2 | Version 3 | Version 4 | YOLOv8s-cls |
 | :---------------------------:   | :--------: | :-------: |  :------: | :-------: | :-------: | :-------:   |
 | Residual connections            |            |           | ✓        | ✓         | ✓         | ✓           |
@@ -38,7 +36,7 @@ The fifth model fully matches the YOLOv8 classifier. It is the end model of back
 | Concatenation of hidden outputs |            |           |           |          | ✓         | ✓           |
 | YOLOv8 classification head      |            |           |           |           |           | ✓           |
 
-
+## Backbone experiments: results
 |                                 | Darknet-19 | Version 1 | Version 2 | Version 3 | Version 4 | YOLOv8s-cls |
 | :---------------------------:   | :--------: | :-------: |  :------: | :-------: | :-------: | :-------:   |
 | Inference, ms [640]           | 379.794      |  216.398  | 211.871   | 114.806   | 120.620   | 117.802     |
