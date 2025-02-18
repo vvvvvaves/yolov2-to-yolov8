@@ -3,8 +3,9 @@ The following repository contains the code from my thesis. The thesis explores t
 
 The experiment is divided into two parts. The first part compares the backbones of YOLOv2 and YOLOv8. The second part compares YOLOv2 and YOLOv8 detection models. The comparison is done by taking a baseline model and building it up until it matches the final model. The build-up is divided into steps, with each step adding a single or multiple design elements.
 
-Backbone models compared in the study:
-Baseline: Darknet-19. It is implemented in accordance with the YOLOv2 paper.
+## Backbone models compared in the study:
+
+### Baseline: Darknet-19. It is implemented in accordance with the YOLOv2 paper.
 
 Experimental model: Version 1
 This model can also be called “bare YOLOv8.” It has the same blocks as YOLOv8-cls, yet, they are stripped of constructs which were not implemented in YOLOv2. It is half the size of Darknet-19, which makes the comparison between them impossible. But it is an architecture with the same set of techniques and, hence, serves as a reference point for further steps in the experiment. In summary, the model:
