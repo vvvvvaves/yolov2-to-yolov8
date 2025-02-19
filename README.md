@@ -54,6 +54,10 @@ The fifth model fully matches the YOLOv8 classifier. It is the end model of back
 
 __Bold__ indicates measures that align with those presented by the authors of original implementations.
 
+## Detection experiments: results
+
+Will be added later.
+
 
 
 
