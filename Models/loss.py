@@ -3,12 +3,14 @@ import torch.nn as nn
 import datetime
 
 class YOLOv2Loss(nn.Module):
-    def __init__(self, anchors, lambda_noobj=0.5, lambda_coord=5.0, num_classes=20):
+    def __init__(self, anchors, lambda_noobj=0.5, lambda_coord=5.0, lambda_isobj=1.0, lambda_class=1.0, num_classes=20):
         super().__init__()
         self.mse = torch.nn.MSELoss(reduction='mean')
         self.softmax = torch.nn.Softmax(dim=2)
         self.lambda_noobj = lambda_noobj
         self.lambda_coord = lambda_coord
+        self.lambda_isobj = lambda_isobj
+        self.lambda_class = lambda_class
         self.num_classes = num_classes
         self.anchors = anchors
         
@@ -105,7 +107,7 @@ class YOLOv2Loss(nn.Module):
         loss =  \
                 self.lambda_coord * (w_loss + h_loss) + \
                 self.lambda_coord * (xc_loss + yc_loss) + \
-                is_obj_conf_loss + \
+                self.lambda_isobj * is_obj_conf_loss + \
                 self.lambda_noobj * no_obj_conf_loss + \
-                class_loss
+                self.lambda_class * class_loss
         return loss

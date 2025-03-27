@@ -29,9 +29,7 @@ def train(epochs, train_loader, val_loader, model, optimizer,
         starting_epoch = 1
         history = pd.DataFrame(columns=['datetime',
                                        'epoch',
-                                       'train_mAP',
                                        'train_loss_per_batch',
-                                       'val_mAP',
                                        'val_loss_per_batch'])
     
         gradient_stats = []
@@ -39,12 +37,12 @@ def train(epochs, train_loader, val_loader, model, optimizer,
     for epoch in range(starting_epoch, int(epochs + starting_epoch)):
         _datetime = datetime.datetime.now()
         print(f"{_datetime} Epoch {epoch} ")
-        train_map, train_loss = training_loop(optimizer, model, loss_fn, train_loader, scaler)
+        train_loss = training_loop(optimizer, model, loss_fn, train_loader, scaler)
 
-        val_map, val_loss = validation_loop(model, val_loader, loss_fn)
+        val_loss = validation_loop(model, val_loader, loss_fn)
         _gradient_stats = get_gradient_stats(model)
 
-        history.loc[epoch - 1] = [_datetime, epoch, train_map, train_loss, val_map, val_loss]
+        history.loc[epoch - 1] = [_datetime, epoch, train_loss, val_loss]
         gradient_stats.append(_gradient_stats)
 
         before_lr = optimizer.param_groups[0]["lr"]

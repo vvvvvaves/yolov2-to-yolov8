@@ -57,7 +57,7 @@ def training_loop(optimizer: torch.optim.Optimizer,
     n_batches = len(train_loader)
     loss_per_batch = round(loss_train / n_batches, 4)
     print(f'[Train] Loss per batch: {loss_per_batch}')
-    return 0, loss_per_batch
+    return loss_per_batch
 
 def validation_loop(model,
                     val_loader: DataLoader[tuple[torch.Tensor, torch.Tensor]],
@@ -81,4 +81,4 @@ def validation_loop(model,
     loss_per_batch = round(loss_val / len(val_loader), 4)
     print(f"[Val]"
           + f" loss per batch: {loss_per_batch}")
-    return 0, loss_per_batch
+    return loss_per_batch

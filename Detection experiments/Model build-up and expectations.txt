@@ -1,0 +1,9 @@
+1. YOLOv2 + YOLOv2 loss
+2. YOLOv2 + YOLOv8 loss
+?. YOLOv8 backbone + YOLOv2 coupled head (1) [different number of boxes, usage of anchor boxes, confidence score still present]
+3. YOLOv8 backbone + YOLOv8 coupled head (1)
+4. YOLOv8 backbone + YOLOv8 coupled heads (3)
+5. YOLOv8 backbone + YOLOv8 decoupled heads (3)
+6. YOLOv8 backbone + FPN + YOLOv8 decoupled heads (3)
+7. YOLOv8 backbone + FPN + PANet + YOLOv8 decoupled heads (3)
+8. YOLOv8 backbone + SPPF + FPN + PANet + YOLOv8 decoupled heads (3)
