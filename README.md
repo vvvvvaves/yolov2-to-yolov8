@@ -1,7 +1,7 @@
-# From YOLOv2 to YOLOv8: a Seven-Year Leap in Object Detection
-The following repository contains the code from my thesis. The thesis explores the advancements made in object detection between 2016 and 2023 by comparing the architectures of YOLOv2 and YOLOv8. 
+# The Development of Classification Backbones: a Leap in Accuracy and Performance
+The following repository contains the code from my thesis. The thesis explores the advancements made in classification models between 2016 and 2023 by comparing the backbones of YOLOv2 and YOLOv8. 
 
-The experiment is divided into two parts. The first part compares the backbones of YOLOv2 and YOLOv8. The second part compares YOLOv2 and YOLOv8 detection models. The comparison is done by taking a baseline model and building it up until it matches the final model. The build-up is divided into steps, with each step adding a single or multiple design elements.
+The experiment compares the backbones of YOLOv2 and YOLOv8. The comparison is done by taking a baseline model and building it up until it matches the final model. The build-up is divided into steps, with each step adding a single or multiple design elements.
 
 _Imagenette2_ is used as a dataset for classification training.
 
@@ -53,10 +53,6 @@ The fifth model fully matches the YOLOv8 classifier. It is the end model of back
 | Validation accuracy, % [224] [20 epochs]                    | 76.74%       | 67.82%    | 73.99%    | 75.69%    | 74.93%    | 76.54%      |
 
 __Bold__ indicates measures that align with those presented by the authors of original implementations.
-
-## Detection experiments: results
-
-Will be added later.
 
 
 
