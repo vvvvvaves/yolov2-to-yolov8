@@ -29,25 +29,25 @@ class Model(nn.Module):
                           padding=(1, 1), bias=False,
                           device=device, dtype=dtype)
         self.c2f1 = C2f(self._ch(128), out_channels=self._ch(128), n=self._d(3), residual_connection=residual_connection, 
-                        CSP=CSP, add_hidden=add_hidden, bottleneck=1.0,
+                        CSP=CSP, add_hidden=add_hidden, bottleneck=bottleneck,
                         device=device, dtype=dtype)
         self.conv3 = Conv(self._ch(128), out_channels=self._ch(256), kernel_size=(3, 3), stride=(2, 2), 
                          padding=(1, 1), bias=False, 
                          device=device, dtype=dtype)
         self.c2f2 = C2f(self._ch(256), out_channels=self._ch(256), n=self._d(6), residual_connection=residual_connection, 
-                        CSP=CSP, add_hidden=add_hidden, bottleneck=1.0,
+                        CSP=CSP, add_hidden=add_hidden, bottleneck=bottleneck,
                         device=device, dtype=dtype)
         self.conv4 = Conv(self._ch(256), out_channels=self._ch(512), kernel_size=(3, 3), stride=(2, 2), 
                          padding=(1, 1), bias=False, 
                          device=device, dtype=dtype)
         self.c2f3 = C2f(self._ch(512), out_channels=self._ch(512), n=self._d(6), residual_connection=residual_connection, 
-                        CSP=CSP, add_hidden=add_hidden, bottleneck=1.0,
+                        CSP=CSP, add_hidden=add_hidden, bottleneck=bottleneck,
                         device=device, dtype=dtype)
         self.conv5 = Conv(self._ch(512), out_channels=self._ch(1024), kernel_size=(3, 3), stride=(2, 2), 
                          padding=(1, 1), bias=False, 
                          device=device, dtype=dtype)
         self.c2f4 = C2f(self._ch(1024), out_channels=self._ch(1024), n=self._d(3), residual_connection=residual_connection, 
-                        CSP=CSP, add_hidden=add_hidden, bottleneck=1.0,
+                        CSP=CSP, add_hidden=add_hidden, bottleneck=bottleneck,
                         device=device, dtype=dtype)
 
         if classifyV8:
